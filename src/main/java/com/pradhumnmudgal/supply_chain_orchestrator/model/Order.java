@@ -22,6 +22,8 @@ public class Order {
 
     private String destinationPincode;
 
+    private int retryCount;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
