@@ -3,6 +3,8 @@ package com.pradhumnmudgal.supply_chain_orchestrator.orchestrator;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.Order;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.OrderStatus;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.OrderRepository;
+
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +13,8 @@ import lombok.RequiredArgsConstructor;
 public class OrderOrchestrator {
 
     private final OrderRepository orderRepository;
-
+    
+    @Async("taskExecutor")
     public void processOrder(Long orderId) {
         
         Order order = orderRepository.findById(orderId)
