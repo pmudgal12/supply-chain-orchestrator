@@ -3,8 +3,9 @@ package com.pradhumnmudgal.supply_chain_orchestrator.orchestrator;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.Order;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.OrderStatus;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.OrderRepository;
+import com.pradhumnmudgal.supply_chain_orchestrator.queue.DeadLetterQueue;
 
-import org.springframework.scheduling.annotation.Async;
+// import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
@@ -13,8 +14,9 @@ import lombok.RequiredArgsConstructor;
 public class OrderOrchestrator {
 
     private final OrderRepository orderRepository;
+    private final DeadLetterQueue deadLetterQueue;
     
-    @Async("taskExecutor")
+    // @Async("taskExecutor") - no longer needed after moving to OrderWorker
     public void processOrder(Long orderId) {
 
         int maxTries = 3;
@@ -55,6 +57,10 @@ public class OrderOrchestrator {
 
                if(currentRetryCount > maxTries) {
                     updateOrderStatus(order, OrderStatus.FAILED);
+                    
+                    // publish to dead letter queue
+                    System.out.println("Publishing to dead letter queue" + order.getId());
+                    deadLetterQueue.publish(order.getId());
                     return;
                } else {
                     order.setRetryCount(currentRetryCount);

@@ -9,7 +9,7 @@ import com.pradhumnmudgal.supply_chain_orchestrator.model.OrderStatus;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.Warehouse;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.OrderRepository;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.WarehouseRepository;
-import com.pradhumnmudgal.supply_chain_orchestrator.orchestrator.OrderOrchestrator;
+import com.pradhumnmudgal.supply_chain_orchestrator.queue.OrderQueue;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +17,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WarehouseRepository warehouseRepository;
-    private final OrderOrchestrator orderOrchestrator;
+    private final OrderQueue orderQueue;
 
     public Order createOrder(Order order) {
 
@@ -33,12 +33,16 @@ public class OrderService {
             order.setStatus(OrderStatus.FAILED);
         }
 
+        // Save the order
         Order savedOrder = orderRepository.save(order);
 
         // Start the order processing
-        orderOrchestrator.processOrder(savedOrder.getId());
+        // Commented as it is now handled by OrderWorker - import and inject also removed
+        // orderOrchestrator.processOrder(savedOrder.getId());
 
-        // Save the order
+        orderQueue.publish(savedOrder.getId());
+
+        // return the saved order
         return savedOrder;
     }
 
