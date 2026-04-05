@@ -3,7 +3,8 @@ package com.pradhumnmudgal.supply_chain_orchestrator.orchestrator;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.Order;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.OrderStatus;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.OrderRepository;
-import com.pradhumnmudgal.supply_chain_orchestrator.queue.DeadLetterQueue;
+// import com.pradhumnmudgal.supply_chain_orchestrator.queue.DeadLetterQueue;
+import com.pradhumnmudgal.supply_chain_orchestrator.queue.RedisDeadLetterQueue;
 
 // import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class OrderOrchestrator {
 
     private final OrderRepository orderRepository;
-    private final DeadLetterQueue deadLetterQueue;
+    // private final DeadLetterQueue deadLetterQueue;
+    private final RedisDeadLetterQueue deadLetterQueue;
     
     // @Async("taskExecutor") - no longer needed after moving to OrderWorker
     public void processOrder(Long orderId) {

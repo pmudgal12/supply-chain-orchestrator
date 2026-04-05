@@ -9,7 +9,8 @@ import com.pradhumnmudgal.supply_chain_orchestrator.model.OrderStatus;
 import com.pradhumnmudgal.supply_chain_orchestrator.model.Warehouse;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.OrderRepository;
 import com.pradhumnmudgal.supply_chain_orchestrator.repository.WarehouseRepository;
-import com.pradhumnmudgal.supply_chain_orchestrator.queue.OrderQueue;
+// import com.pradhumnmudgal.supply_chain_orchestrator.queue.OrderQueue;
+import com.pradhumnmudgal.supply_chain_orchestrator.queue.RedisOrderQueue;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WarehouseRepository warehouseRepository;
-    private final OrderQueue orderQueue;
+    // private final OrderQueue orderQueue;
+    private final RedisOrderQueue orderQueue;
 
     public Order createOrder(Order order) {
 
